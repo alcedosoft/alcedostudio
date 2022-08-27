@@ -1,0 +1,128 @@
+﻿@page "/model"
+
+<PageTitle>Model</PageTitle>
+
+<MudDataGrid T="FileSchemaItem"
+             Items="@_schema.Items"
+             Dense="true"
+             ReadOnly="false"
+             SortMode="SortMode.None"
+             EditMode="DataGridEditMode.Cell"
+             EditTrigger="DataGridEditTrigger.OnRowClick"
+             CommittedItemChanges="OnItemChanged">
+    <Columns>
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Name)" />
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Type)">
+            <EditTemplate>
+                <MudSelect T="string"
+                           Value="context.Item.Type"
+                           ValueChanged="type => OnTypeChanged(context, type)">
+                    <MudSelectItem Value="@("string")">string</MudSelectItem>
+                    <MudSelectItem Value="@("int")">int</MudSelectItem>
+                    <MudSelectItem Value="@("bool")">bool</MudSelectItem>
+                    <MudSelectItem Value="@("long")">long</MudSelectItem>
+                    <MudSelectItem Value="@("float")">float</MudSelectItem>
+                    <MudSelectItem Value="@("double")">double</MudSelectItem>
+                    <MudSelectItem Value="@("DateTime")">DateTime</MudSelectItem>
+                </MudSelect>
+            </EditTemplate>
+        </Column>
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.DisplayName)" />
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Description)" />
+        <Column T="FileSchemaItem" IsEditable="false">
+            <HeaderTemplate>
+                <MudIconButton Icon="@Icons.Filled.Add" Color="Color.Success" OnClick="CreateItem" />
+            </HeaderTemplate>
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Filled.Delete" Color="Color.Error" OnClick="x => DeleteItem(context.Item)" />
+            </CellTemplate>
+        </Column>
+    </Columns>
+</MudDataGrid>
+
+@code {
+    private FileSchema _schema = new();
+
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        var text = @"
+{
+  ""Name"": ""Book"",
+  ""DisplayName"": ""图书"",
+  ""Description"": ""图书信息"",
+  ""Items"": [
+    {
+      ""Name"": ""Id"",
+      ""Type"": ""int"",
+      ""DisplayName"": ""编号"",
+      ""Description"": ""图书编号""
+    },
+    {
+      ""Name"": ""Title"",
+      ""Type"": ""string"",
+      ""DisplayName"": ""名称"",
+      ""Description"": ""图书名称""
+    },
+    {
+      ""Name"": ""Description"",
+      ""Type"": ""string"",
+      ""DisplayName"": ""简介"",
+      ""Description"": ""图书简介""
+    }
+  ]
+}
+";
+
+        _schema = JsonSerializer.Deserialize<FileSchema>(text) ?? new();
+
+        base.OnInitialized();
+    }
+
+    void CreateItem()
+    {
+        _schema.Items.Add(new()
+            {
+                Name = "Field1",
+                Type = "string",
+                DisplayName = "Field1",
+                Description = "Field1",
+            });
+
+        this.Snackbar.Add("Item Created", Severity.Success);
+    }
+
+    async Task DeleteItem(FileSchemaItem item)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Warning",
+            "Deleting can not be undone!",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (result is true)
+        {
+            _schema.Items.Remove(item);
+
+            this.Snackbar.Add("Item Deleted", Severity.Success);
+        }
+    }
+
+    void OnTypeChanged(CellContext<FileSchemaItem> context, string type)
+    {
+        context.Item.Type = type;
+
+        context.Actions.CancelEditingItem();
+
+        this.OnItemChanged();
+    }
+
+    void OnItemChanged()
+    {
+        this.Snackbar.Add("Item Updated", Severity.Success);
+
+        Console.WriteLine(JsonSerializer.Serialize(_schema));
+    }
+}

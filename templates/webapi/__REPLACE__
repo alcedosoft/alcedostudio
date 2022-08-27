@@ -1,0 +1,7 @@
+﻿[NAME].sln
+[NAME]/Usings.cs
+[NAME]/DataContext.cs
+[NAME]/Properties/launchSettings.json
+[NAME]/Books/Book.cs
+[NAME]/Books/BookContext.cs
+[NAME]/Books/BooksController.cs

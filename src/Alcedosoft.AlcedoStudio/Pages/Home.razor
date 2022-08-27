@@ -1,0 +1,25 @@
+﻿@page "/"
+@inject FileSystemAccessService FileSystemAccessService
+
+<PageTitle>Index</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
+<MudText Class="mb-8">Welcome to the app, powered by MudBlazor!</MudText>
+
+<MudAlert Severity="IsSupported? Severity.Success: Severity.Error">
+    The File System Access API is @(IsSupported ? "" : "not") supported in this browser.
+</MudAlert>
+
+@code {
+    private bool IsSupported;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IsSupported = await FileSystemAccessService.IsSupported();
+
+            StateHasChanged();
+        }
+    }
+}

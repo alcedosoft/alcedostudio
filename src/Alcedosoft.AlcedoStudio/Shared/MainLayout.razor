@@ -1,0 +1,87 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider @ref="@_themeProvider" @bind-IsDarkMode="@_isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Inherit"
+                       Edge="Edge.Start"
+                       OnClick="@((e) => DrawerToggle())" />
+        <MudText Color="Color.Default">Low-Code Playground</MudText>
+
+        <MudSpacer />
+
+        <MudToggleIconButton Toggled="_isDarkMode"
+                             Icon="@Icons.Filled.DarkMode"
+                             Color="@Color.Tertiary"
+                             Title="Dark Mode"
+                             ToggledIcon="@Icons.Filled.LightMode"
+                             ToggledColor="@Color.Primary"
+                             ToggledTitle="Light Mode"
+                             ToggledChanged="e => this.OnToggledChanged(e)" />
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
+                       Color="Color.Inherit"
+                       Link="https://github.com/alcedosoft/alcedosoft.lowcode"
+                       Target="_blank" />
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen"
+               Elevation="2"
+               ClipMode="DrawerClipMode.Always"
+               Variant="DrawerVariant.Responsive">
+        <NavMenu />
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="pt-16">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _isDarkMode;
+    private bool _drawerOpen = true;
+    private MudThemeProvider? _themeProvider;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && _themeProvider is not null)
+        {
+            _isDarkMode = await _themeProvider.GetSystemPreference();
+
+            await this.ToggleEditorTheme(_isDarkMode);
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnToggledChanged(bool isDarkMode)
+    {
+        _isDarkMode = isDarkMode;
+
+        await this.ToggleEditorTheme(isDarkMode);
+    }
+
+    private async Task ToggleEditorTheme(bool isDarkMode)
+    {
+        await Task.Yield();
+
+        //if (_isDarkMode)
+        //{
+        //    await MonacoEditor.SetTheme("vs-dark");
+        //}
+        //else
+        //{
+        //    await MonacoEditor.SetTheme("vs");
+        //}
+    }
+
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

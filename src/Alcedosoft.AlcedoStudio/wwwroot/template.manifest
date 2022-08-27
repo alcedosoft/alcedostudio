@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Web API Project",
+    "path": "/webapi.template",
+    "isenabled": true
+  },
+  {
+    "name": "Abp Project(Coming Soon)",
+    "path": "/abp.template",
+    "isenabled": false
+  }
+]

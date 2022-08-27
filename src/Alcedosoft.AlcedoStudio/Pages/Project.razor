@@ -1,0 +1,59 @@
+﻿@page "/project"
+<PageTitle>Project</PageTitle>
+
+@if (FileSystemItems.Count <= 0)
+{
+    <MudButton Disabled="@_loading" OnClick="this.OpenDictionayAsync" Variant="Variant.Outlined" Color="Color.Primary">
+        @if (_loading)
+        {
+            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+            <MudText Class="ms-2">Loading</MudText>
+        }
+        else
+        {
+            <MudText>Browse</MudText>
+        }
+    </MudButton>
+}
+
+<MudGrid>
+    <MudItem lg="4">
+        <MudTabs Elevation="2" Rounded="true" Centered="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+            <MudTabPanel Text="Schema">
+                <MudTreeView Items="@Schemas"
+                             SelectedValueChanged="(FileSchema? item) => OnSelectSchemaChanged(item)"
+                             Hover="true">
+                    <ItemTemplate>
+                        <MudTreeViewItem Value="@context"
+                                         Icon="@Icons.Filled.Schema"
+                                         IconColor="@Color.Default"
+                                         EndIcon="@Icons.Filled.Edit"
+                                         Text="@context.Name">
+                        </MudTreeViewItem>
+                    </ItemTemplate>
+                </MudTreeView>
+            </MudTabPanel>
+            <MudTabPanel Text="Solution">
+                <MudTreeView Items="@FileSystemItems"
+                             SelectedValueChanged="(FileSystemItem? item) => OnSelectedItemChanged(item)"
+                             Hover="true">
+                    <ItemTemplate>
+                        <MudTreeViewItem Value="@context"
+                                         Items="@context.Items"
+                                         Icon="@context.Icon"
+                                         IconColor="@Color.Default"
+                                         Text="@context.Name"
+                                         @bind-Expanded="@context.IsExpanded">
+                        </MudTreeViewItem>
+                    </ItemTemplate>
+                </MudTreeView>
+            </MudTabPanel>
+        </MudTabs>
+    </MudItem>
+
+    <MudItem lg="8">
+        <MonacoEditor @ref="Editor"
+                      Id="csharp-editor"
+                      ConstructionOptions="EditorConstructionOptions" />
+    </MudItem>
+</MudGrid>
