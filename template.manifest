@@ -1,0 +1,7 @@
+[
+  {
+    "name": "ABP Project(EFCore + Blazor)",
+    "path": "/abp_efcore_blazor.template",
+    "disabled": false
+  }
+]
