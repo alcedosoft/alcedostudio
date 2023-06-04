@@ -36,7 +36,7 @@ public class OpenProjectCommand : Command
                     _ = _workspace.Schemas.Add(schema);
                 }
 
-                await ResolveSolution(_workspace.DirectoryHandle, _workspace.FileSystemItems);
+                await this.ResolveSolution(_workspace.DirectoryHandle, _workspace.FileSystemItems);
 
                 _ = _workspace.Snackbar.Add("Project Opened", Severity.Success);
             }
@@ -63,7 +63,7 @@ public class OpenProjectCommand : Command
             _ = _workspace.Schemas.Add(schema);
         }
 
-        await ResolveSolution(directory, _workspace.FileSystemItems);
+        await this.ResolveSolution(directory, _workspace.FileSystemItems);
     }
 
     private async Task ResolveSolution(FileSystemDirectoryHandle directory, HashSet<FileSystemItem> items)
@@ -91,7 +91,7 @@ public class OpenProjectCommand : Command
 
                 item = new FileSystemFolderItem(subDirectory);
 
-                await ResolveSolution(subDirectory, item.Items);
+                await this.ResolveSolution(subDirectory, item.Items);
             }
 
             _ = items.Add(item);

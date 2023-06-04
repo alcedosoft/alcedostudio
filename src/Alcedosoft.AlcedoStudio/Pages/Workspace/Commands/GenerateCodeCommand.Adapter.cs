@@ -15,11 +15,11 @@ public partial class GenerateCodeCommand
         var serviceFile = await application.GetFileHandleAsync(
             $"{projectName.PascalSubName}ApplicationAutoMapperProfile.cs", new(){ Create = true });
 
-        var pageContent = GeneratePageAutoMapper(projectName, schemas);
-        var serviceContent = GenerateServiceAutoMapper(projectName, schemas);
+        var pageContent = this.GeneratePageAutoMapper(projectName, schemas);
+        var serviceContent = this.GenerateServiceAutoMapper(projectName, schemas);
 
-        await WriteTextAsync(pageFile, pageContent);
-        await WriteTextAsync(serviceFile, serviceContent);
+        await this.WriteTextAsync(pageFile, pageContent);
+        await this.WriteTextAsync(serviceFile, serviceContent);
     }
 
     private string GenerateServiceAutoMapper(ProjectName projectName, IEnumerable<FileSchema> schemas)

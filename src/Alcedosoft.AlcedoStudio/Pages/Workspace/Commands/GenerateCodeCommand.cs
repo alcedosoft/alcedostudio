@@ -27,7 +27,7 @@ public partial class GenerateCodeCommand : Command
 
             if (templateName is "abp_efcore_blazor")
             {
-                await GenerateAbpEFCoreBlazorAsync(_workspace.DirectoryHandle);
+                await this.GenerateAbpEFCoreBlazorAsync(_workspace.DirectoryHandle);
             }
         }
 
@@ -53,16 +53,16 @@ public partial class GenerateCodeCommand : Command
 
         foreach (var schema in _workspace.Schemas)
         {
-            await GenerateModelAsync(projectName, src, schema);
-            await GenerateServiceAsync(projectName, src, schema);
-            await GeneratePageAsync(projectName, src, schema);
+            await this.GenerateModelAsync(projectName, src, schema);
+            await this.GenerateServiceAsync(projectName, src, schema);
+            await this.GeneratePageAsync(projectName, src, schema);
         }
 
-        await GenerateAdapterAsync(projectName, src, _workspace.Schemas);
-        await GenerateContextAsync(projectName, src, _workspace.Schemas);
-        await GeneratePermissionAsync(projectName, src, _workspace.Schemas);
-        await GenerateMenuAsync(projectName, src, _workspace.Schemas);
-        await GenerateLocalizationAsync(projectName, src, _workspace.Schemas);
+        await this.GenerateAdapterAsync(projectName, src, _workspace.Schemas);
+        await this.GenerateContextAsync(projectName, src, _workspace.Schemas);
+        await this.GeneratePermissionAsync(projectName, src, _workspace.Schemas);
+        await this.GenerateMenuAsync(projectName, src, _workspace.Schemas);
+        await this.GenerateLocalizationAsync(projectName, src, _workspace.Schemas);
 
         _ = _workspace.Snackbar.Add("Code Generated", Severity.Success);
 

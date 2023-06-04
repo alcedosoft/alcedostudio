@@ -26,15 +26,15 @@ public partial class GenerateCodeCommand : Command
         var updateDtoFile = await entityDtoDir.GetFileHandleAsync(
             $"{schemaName.PascalName}UpdateDto.cs", new(){ Create = true });
 
-        var entityContent = GenerateEntity(projectName, schema);
-        var queryDtoContent = GenerateQueryDto(projectName, schema);
-        var createDtoContent = GenerateCreateDto(projectName, schema);
-        var updateDtoContent = GenerateUpdateDto(projectName, schema);
+        var entityContent = this.GenerateEntity(projectName, schema);
+        var queryDtoContent = this.GenerateQueryDto(projectName, schema);
+        var createDtoContent = this.GenerateCreateDto(projectName, schema);
+        var updateDtoContent = this.GenerateUpdateDto(projectName, schema);
 
-        await WriteTextAsync(entityFile, entityContent);
-        await WriteTextAsync(queryDtoFile, queryDtoContent);
-        await WriteTextAsync(createDtoFile, createDtoContent);
-        await WriteTextAsync(updateDtoFile, updateDtoContent);
+        await this.WriteTextAsync(entityFile, entityContent);
+        await this.WriteTextAsync(queryDtoFile, queryDtoContent);
+        await this.WriteTextAsync(createDtoFile, createDtoContent);
+        await this.WriteTextAsync(updateDtoFile, updateDtoContent);
     }
 
     private string GenerateEntity(ProjectName projectName, FileSchema schema)

@@ -16,11 +16,11 @@ public partial class GenerateCodeCommand : Command
         var definitionFile = await permissionDir.GetFileHandleAsync(
             $"{projectName.PascalSubName}PermissionDefinitionProvider.cs", new(){ Create = true });
 
-        var constantContent = GenerateConstant(projectName, schemas);
-        var definitionContent = GenerateDefinition(projectName, schemas);
+        var constantContent = this.GenerateConstant(projectName, schemas);
+        var definitionContent = this.GenerateDefinition(projectName, schemas);
 
-        await WriteTextAsync(constantFile, constantContent);
-        await WriteTextAsync(definitionFile, definitionContent);
+        await this.WriteTextAsync(constantFile, constantContent);
+        await this.WriteTextAsync(definitionFile, definitionContent);
     }
 
     private string GenerateConstant(ProjectName projectName, IEnumerable<FileSchema> schemas)

@@ -16,18 +16,18 @@ public partial class GenerateCodeCommand
         var pageFile = await pageDir.GetFileHandleAsync(
             $"{schemaName.PluralPascalName}.razor", new(){ Create = true });
 
-        var pageContent = GeneratePage(projectName, schema);
+        var pageContent = this.GeneratePage(projectName, schema);
 
-        await WriteTextAsync(pageFile, pageContent);
+        await this.WriteTextAsync(pageFile, pageContent);
     }
 
     private string GeneratePage(ProjectName projectName, FileSchema schema)
     {
         var schemaName = new SchemaName(schema.Name);
 
-        var list = GenerateList(schema, schemaName);
-        var create = GenerateCreate(schema, schemaName);
-        var update = GenerateUpdate(schema, schemaName);
+        var list = this.GenerateList(schema, schemaName);
+        var create = this.GenerateCreate(schema, schemaName);
+        var update = this.GenerateUpdate(schema, schemaName);
 
         return $@"@page ""/{schemaName.PluralCamelName}""
 @inject IStringLocalizer<{projectName.PascalSubName}Resource> L

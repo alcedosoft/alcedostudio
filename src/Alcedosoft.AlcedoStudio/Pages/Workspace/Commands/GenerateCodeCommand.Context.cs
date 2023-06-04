@@ -19,11 +19,11 @@ public partial class GenerateCodeCommand : Command
         var contextFile = await contextDir.GetFileHandleAsync(
             $"{projectName.PascalSubName}DbContext.Entity.cs", new(){ Create = true });
 
-        var seedContent = GenerateDataSeed(projectName, schemas);
-        var contextContent = GenerateDataContext(projectName, schemas);
+        var seedContent = this.GenerateDataSeed(projectName, schemas);
+        var contextContent = this.GenerateDataContext(projectName, schemas);
 
-        await WriteTextAsync(seedFile, seedContent);
-        await WriteTextAsync(contextFile, contextContent);
+        await this.WriteTextAsync(seedFile, seedContent);
+        await this.WriteTextAsync(contextFile, contextContent);
     }
 
     private string GenerateDataContext(ProjectName projectName, IEnumerable<FileSchema> schemas)

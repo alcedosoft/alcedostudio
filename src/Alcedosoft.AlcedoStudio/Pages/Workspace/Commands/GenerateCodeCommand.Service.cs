@@ -22,11 +22,11 @@ public partial class GenerateCodeCommand : Command
         var implementFile = await implementDir.GetFileHandleAsync(
             $"{schemaName.PascalName}AppService.cs", new(){ Create = true });
 
-        var interfaceContent = GenerateInterface(projectName, schema);
-        var implementContent = GenerateImplement(projectName, schema);
+        var interfaceContent = this.GenerateInterface(projectName, schema);
+        var implementContent = this.GenerateImplement(projectName, schema);
 
-        await WriteTextAsync(interfaceFile, interfaceContent);
-        await WriteTextAsync(implementFile, implementContent);
+        await this.WriteTextAsync(interfaceFile, interfaceContent);
+        await this.WriteTextAsync(implementFile, implementContent);
     }
 
     private string GenerateInterface(ProjectName projectName, FileSchema schema)

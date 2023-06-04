@@ -16,11 +16,11 @@ public partial class GenerateCodeCommand
         var mainMenuFile = await menuDir.GetFileHandleAsync(
             $"{projectName.PascalSubName}MenuContributor.MainMenu.cs", new(){ Create = true });
 
-        var constContent = GenerateMenuConst(projectName, schemas);
-        var mainMenuContent = GenerateMenuMain(projectName, schemas);
+        var constContent = this.GenerateMenuConst(projectName, schemas);
+        var mainMenuContent = this.GenerateMenuMain(projectName, schemas);
 
-        await WriteTextAsync(constFile, constContent);
-        await WriteTextAsync(mainMenuFile, mainMenuContent);
+        await this.WriteTextAsync(constFile, constContent);
+        await this.WriteTextAsync(mainMenuFile, mainMenuContent);
     }
 
     private string GenerateMenuConst(ProjectName projectName, IEnumerable<FileSchema> schemas)

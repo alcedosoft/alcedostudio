@@ -17,9 +17,9 @@ public partial class GenerateCodeCommand
         var zh_HansFile = await localizationDir.GetFileHandleAsync(
             "zh-Hans.json", new(){ Create = true });
 
-        var zh_HansContent = Generatezh_Hans(projectName, schemas);
+        var zh_HansContent = this.Generatezh_Hans(projectName, schemas);
 
-        await WriteTextAsync(zh_HansFile, zh_HansContent);
+        await this.WriteTextAsync(zh_HansFile, zh_HansContent);
     }
 
     private string Generatezh_Hans(ProjectName projectName, IEnumerable<FileSchema> schemas)

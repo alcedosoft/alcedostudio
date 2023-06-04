@@ -4,13 +4,13 @@ public class FileSystemFolderItem : FileSystemItem
 {
     public FileSystemFolderItem(FileSystemDirectoryHandle directory)
     {
-        Name = directory.Name;
-        Extension = Path.GetExtension(directory.Name);
+        this.Name = directory.Name;
+        this.Extension = Path.GetExtension(directory.Name);
 
-        Handle = directory;
+        this.Handle = directory;
     }
 
-    public override string Icon => IsExpanded
+    public override string Icon => this.IsExpanded
         ? Icons.Custom.Uncategorized.FolderOpen
         : Icons.Custom.Uncategorized.Folder;
 

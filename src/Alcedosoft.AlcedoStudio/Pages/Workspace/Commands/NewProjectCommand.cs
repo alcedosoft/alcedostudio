@@ -34,7 +34,7 @@ public class NewProjectCommand : Command
 
                     _workspace.StateHasChanged();
 
-                    await ExecuteAsync(viewModel);
+                    await this.ExecuteAsync(viewModel);
 
                     await _openCommand.LoadDirectory(viewModel.DirectoryHandle);
 
