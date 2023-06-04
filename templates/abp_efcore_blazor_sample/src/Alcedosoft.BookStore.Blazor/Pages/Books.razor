@@ -1,0 +1,52 @@
+﻿@page "/books"
+@inherits AbpCrudPageBase<IBookAppService, BookDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateBookDto>
+
+<Card>
+  <CardHeader>
+    <Row Class="justify-content-between">
+      @*<Column Co*@
+    </Row>
+  </CardHeader>
+
+  <CardBody>
+    <DataGrid TItem="BookDto"
+              Data="this.Entities"
+              ReadData="this.OnDataGridReadAsync"
+              TotalItems="this.TotalCount"
+              ShowPager="true"
+              PageSize="this.PageSize">
+      <DataGridColumns>
+        <DataGridColumn TItem="BookDto"
+                        Field="@nameof(BookDto.Name)"
+                        Caption="Name">
+        </DataGridColumn>
+        <DataGridColumn TItem="BookDto"
+                        Field="@nameof(BookDto.Type)"
+                        Caption="Type">
+        </DataGridColumn>
+        <DataGridColumn TItem="BookDto"
+                        Field="@nameof(BookDto.PublishDate)"
+                        Caption="PublishDate">
+          <DisplayTemplate>
+            @context.PublishDate.ToShortDateString()
+          </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn TItem="BookDto"
+                        Field="@nameof(BookDto.Price)"
+                        Caption="Price">
+        </DataGridColumn>
+        <DataGridColumn TItem="BookDto"
+                        Field="@nameof(BookDto.CreationTime)"
+                        Caption="CreationTime">
+          <DisplayTemplate>
+            @context.CreationTime.ToShortDateString()
+          </DisplayTemplate>
+        </DataGridColumn>
+      </DataGridColumns>
+    </DataGrid>
+  </CardBody>
+</Card>
+
+@code {
+
+}

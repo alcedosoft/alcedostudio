@@ -1,0 +1,37 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>[PROJECTNAME]</RootNamespace>
+    <AbpProjectType>app</AbpProjectType>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="$(RootNamespace)"/>
+    <Using Include="System.Diagnostics"/>
+    <Using Include="System.ComponentModel"/>
+    <Using Include="System.Security.Claims"/>
+    <Using Include="System.Runtime.InteropServices"/>
+    <Using Include="System.Runtime.CompilerServices"/>
+    <Using Include="Microsoft.Extensions.Configuration"/>
+    <Using Include="Microsoft.Extensions.DependencyInjection"/>
+    <Using Include="Microsoft.Extensions.DependencyInjection.Extensions"/>
+    <Using Include="Microsoft.Extensions.Logging"/>
+    <Using Include="Microsoft.Extensions.Logging.Abstractions"/>
+    <Using Include="Microsoft.Extensions.Hosting"/>
+  </ItemGroup>
+
+  <Target Name="NoWarnOnRazorViewImportedTypeConflicts" BeforeTargets="RazorCoreCompile">
+    <PropertyGroup>
+      <NoWarn>$(NoWarn);0436</NoWarn>
+    </PropertyGroup>
+  </Target>
+
+</Project>

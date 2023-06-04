@@ -1,0 +1,38 @@
+﻿<MonacoEditor @ref="Editor"
+              Id="csharp-editor"
+              ConstructionOptions="EditorConstructionOptions" />
+
+<style type="text/css">
+    .monaco-editor-container {
+        height: 660px;
+    }
+</style>
+
+@code {
+    public MonacoEditor? Editor { get; set; }
+    [Parameter] public FileSystemItem Item { get; set; } = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await MonacoEditorBase.SetTheme("vs-dark");
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+            {
+                ReadOnly = true,
+                Language = "csharp"
+            };
+    }
+
+    public Task SetValue(string content)
+    {
+        return this.Editor?.SetValue(content) ?? Task.CompletedTask;
+    }
+}

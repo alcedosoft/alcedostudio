@@ -1,0 +1,19 @@
+{
+  "Name": "Article",
+  "DisplayName": "Article",
+  "Description": "Article management.",
+  "Items": [
+    {
+      "Name": "Title",
+      "DataType": "string",
+      "DisplayName": "Title",
+      "Description": "Article title."
+    },
+    {
+      "Name": "Content",
+      "DataType": "string",
+      "DisplayName": "Content",
+      "Description": "Article content."
+    }
+  ]
+}

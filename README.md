@@ -1,5 +1,14 @@
 # Alcedo Studio
+A low-code tool for rapid development of applications based on the abp framework.
 
-一个低代码工具，可以快速进行基于 abp 框架的应用开发。
+## Online
+No installation required, [try now>>](https://alcedo.studio)  
+Web page access is slow? [mirror >>](https://alcedostuio.gitee.io)
 
-无需安装，[立刻开始](https://alcedo.studio)
+## Thanks
+This project is based on the following projects, thank you for your contribution :heart:
+- [Blazor](https://blazor.net)
+- [ABP Framework](https://abp.io)
+- [MudBlazor](https://mudblazor.com)
+- [BlazorMonaco](https://github.com/serdarciplak/BlazorMonaco)
+- [FileSystemAccess.Blazor](https://github.com/KristofferStrube/Blazor.FileSystemAccess)

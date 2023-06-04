@@ -1,0 +1,106 @@
+﻿<MudDataGrid T="FileSchemaItem"
+             Items="@Schema.Items"
+             Dense="true"
+             Bordered="true"
+             ReadOnly="false"
+             EditMode="DataGridEditMode.Cell"
+             CommittedItemChanges="OnItemChanged">
+    <Columns>
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Name)" />
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.DataType)">
+            <EditTemplate>
+                <MudSelect T="string"
+                           Value="context.Item.DataType"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="type => OnTypeChanged(context, type)">
+                    <MudSelectItem Value="@("string")">string</MudSelectItem>
+                    <MudSelectItem Value="@("int")">int</MudSelectItem>
+                    <MudSelectItem Value="@("bool")">bool</MudSelectItem>
+                    <MudSelectItem Value="@("float")">float</MudSelectItem>
+                    <MudSelectItem Value="@("DateTime")">DateTime</MudSelectItem>
+                </MudSelect>
+            </EditTemplate>
+        </Column>
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.DisplayName)" />
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Description)" />
+        <Column T="FileSchemaItem" IsEditable="false" Sortable="false">
+            <HeaderTemplate>
+                <MudIconButton Icon="@Icons.Filled.Add" Color="Color.Tertiary" OnClick="CreateItem" />
+            </HeaderTemplate>
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Filled.Delete" Color="Color.Error" OnClick="x => DeleteItem(context.Item)" />
+            </CellTemplate>
+        </Column>
+    </Columns>
+</MudDataGrid>
+
+@code {
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    [Inject] public IDialogService DialogService { get; set; } = null!;
+    [Parameter] public FileSchema Schema { get; set; } = null!;
+
+    public async Task CreateItem()
+    {
+        this.Schema.Items.Add(new()
+            {
+                Name = "Field1",
+                DataType = "string",
+                DisplayName = "Field1",
+                Description = "Field1",
+            });
+
+        await this.SaveAsync();
+
+        this.Snackbar.Add("Item Created", Severity.Success);
+    }
+
+    public async Task DeleteItem(FileSchemaItem item)
+    {
+        var parameters = new DialogParameters
+        {
+            { "Message", "Do you really want to delete the item? This process cannot be undone." },
+            { "ButtonText", "Delete" },
+            { "ButtonColor", Color.Error }
+        };
+
+        var dialog = DialogService.Show<ConfirmDialog>("Delete", parameters);
+
+        if (await dialog.Result is { Data: true })
+        {
+            Schema.Items.Remove(item);
+
+            await this.SaveAsync();
+
+            this.Snackbar.Add("Item Deleted", Severity.Success);
+        }
+    }
+
+    public async Task OnTypeChanged(CellContext<FileSchemaItem> context, string type)
+    {
+        context.Item.DataType = type;
+
+        context.Actions.CancelEditingItem();
+
+        await this.OnItemChanged();
+    }
+
+    public async Task OnItemChanged()
+    {
+        await this.SaveAsync();
+
+        this.Snackbar.Add("Item Updated", Severity.Success);
+    }
+
+    public async Task SaveAsync()
+    {
+        if (Schema.Handle is not null)
+        {
+            var writer = await Schema.Handle
+            .CreateWritableAsync(new() { KeepExistingData = false });
+
+            await writer.WriteAsync(JsonSerializer.Serialize(Schema));
+
+            await writer.CloseAsync();
+        }
+    }
+}

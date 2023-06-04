@@ -1,0 +1,42 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="SyncToCloudForm">
+            <MudTextField @bind-Value="@SyncToCloudModel.Account"
+                          Label="Account"
+                          Placeholder="Enter the EmailAddress or PhoneNumber"
+                          AutoFocus="true"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Instance.Cancel">Cancel</MudButton>
+        <MudButton Disabled="true" Color="Color.Primary" OnClick="Submit">Sync(Coming Soon)</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter] MudDialogInstance Instance { get; set; } = null!;
+
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public FileSystemAccessService FileSystemService { get; set; } = null!;
+
+    public MudForm? SyncToCloudForm { get; set; }
+    public SyncToCloudViewModel SyncToCloudModel { get; set; } = new();
+
+    public async void Submit()
+    {
+        if (this.SyncToCloudForm is not null)
+        {
+            await this.SyncToCloudForm.Validate();
+
+            if (this.SyncToCloudForm.IsValid)
+            {
+                this.Instance.Close(SyncToCloudModel);
+            }
+        }
+    }
+}

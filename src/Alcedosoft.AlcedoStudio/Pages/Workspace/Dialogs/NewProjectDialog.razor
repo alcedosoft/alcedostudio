@@ -1,0 +1,94 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="NewProjectForm">
+            <MudTextField @bind-Value="@NewProjectModel.ProjectName"
+                          Label="Project Name"
+                          AutoFocus="true"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+            <MudSelect @bind-Value="@NewProjectModel.TemplatePath"
+                       Label="Project Template"
+                       AnchorOrigin="Origin.BottomCenter"
+                       Required="true"
+                       Clearable="true">
+                @foreach (var option in TemplateOptions)
+                {
+                    <MudSelectItem Value="option.Path"
+                               Disabled="option.Disabled">
+                        @option.Name
+                    </MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField @bind-Value="@NewProjectModel.ProjectDirectory"
+                          ReadOnly="true"
+                          Required="true"
+                          Label="Project Directory"
+                          Variant="Variant.Text"
+                          Adornment="Adornment.End"
+                          AdornmentColor="Color.Primary"
+                          AdornmentIcon="@Icons.Filled.FolderOpen"
+                          OnAdornmentClick="SelectDirectory"
+                          HelperText="Select empty directory." />
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Instance.Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Create</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter] MudDialogInstance Instance { get; set; } = null!;
+
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public FileSystemAccessService FileSystemService { get; set; } = null!;
+
+    public MudForm? NewProjectForm { get; set; }
+    public NewProjectViewModel NewProjectModel { get; set; } = new();
+    public TemplateMainfest[] TemplateOptions { get; set; } = Array.Empty<TemplateMainfest>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var options = await this.HttpClient
+        .GetFromJsonAsync<TemplateMainfest[]>("/template.manifest");
+
+        if (options is not null)
+        {
+            this.TemplateOptions = options;
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    public async void Submit()
+    {
+        if (this.NewProjectForm is not null)
+        {
+            await this.NewProjectForm.Validate();
+
+            if (this.NewProjectForm.IsValid)
+            {
+                this.Instance.Close(NewProjectModel);
+            }
+        }
+    }
+
+    public async Task SelectDirectory()
+    {
+        var options = new DirectoryPickerOptionsStartInWellKnownDirectory
+            {
+                StartIn = WellKnownDirectory.Desktop
+            };
+
+        var directory = await this.FileSystemService.ShowDirectoryPickerAsync(options);
+
+        if (directory is not null)
+        {
+            this.NewProjectModel.DirectoryHandle = directory;
+            this.NewProjectModel.ProjectDirectory = directory.Name;
+        }
+    }
+}

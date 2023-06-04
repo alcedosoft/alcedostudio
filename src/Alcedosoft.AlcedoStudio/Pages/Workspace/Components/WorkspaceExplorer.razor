@@ -1,0 +1,125 @@
+﻿<MudPaper Elevation="2">
+    <MudToolBar>
+
+        @if (!IsCode)
+        {
+            <MudIconButton Command="NewSchemaCommand"
+                       Icon="@Icons.Filled.Add"
+                       Color="Color.Tertiary"
+                       Title="New Schema" />
+
+            @if (SelectedSchema is not null)
+            {
+                <MudIconButton Command="EditSchemaCommand"
+                       Icon="@Icons.Filled.ModeEditOutline"
+                       Color="Color.Warning"
+                       Title="Edit Schema" />
+                <MudIconButton Command="RemoveSchemaCommand"
+                       Icon="@Icons.Filled.Delete"
+                       Color="Color.Error"
+                       Title="Remove Schema" />
+            }
+
+            <MudIconButton Command="GenerateCodeCommand"
+                       Icon="@Icons.Filled.ViewInAr"
+                       Color="Color.Primary"
+                       Title="Generate Code" />
+
+
+            <MudIconButton Command="SyncToCloudCommand"
+                       Icon="@Icons.Filled.Backup"
+                       Color="Color.Tertiary"
+                       Title="Sync To Cloud" />
+        }
+        else
+        {
+            <MudIconButton Href="git-client://clone?repo=https://alcedo.studio"
+                       Target="_blank"
+                       Icon="@Icons.Custom.Brands.MicrosoftVisualStudio"
+                       Color="Color.Primary"
+                       Title="Open In Microsoft Visual Studio" />
+            <MudIconButton Href="vscode://"
+                       Target="_blank"
+                       Icon="@Icons.Custom.Brands.MicrosoftVisualStudio"
+                       Color="Color.Info"
+                       Title="Open In Visual Studio Code" />
+            <MudIconButton Href="https://www.aipuyang.com"
+                       Target="_blank"
+                       Icon="@Icons.Filled.LogoDev"
+                       Color="Color.Default"
+                       Title="Open In DevMagic Studio" />
+        }
+
+        <MudSpacer />
+
+        <MudToggleIconButton Toggled="IsCode"
+                             ToggledChanged="IsCodeChanged"
+                             Icon="@Icons.Filled.Code"
+                             Title="Toggle Code View"
+                             Color="Color.Inherit"
+                             ToggledIcon="@Icons.Filled.CodeOff"
+                             ToggledTitle="Toggle Schema View"
+                             ToggledColor="Color.Inherit" />
+    </MudToolBar>
+
+    <MudDivider />
+
+    @if (IsCode)
+    {
+        <MudTreeView Items="@FileSystemItems"
+                 Hover="true"
+                 ExpandOnClick="true"
+                 SelectedValue="SelectedItem"
+                 SelectedValueChanged="SelectedItemChanged">
+            <ItemTemplate>
+                <MudTreeViewItem Value="@context"
+                             Items="@context.Items"
+                             Icon="@context.Icon"
+                             IconColor="@context.IconColor"
+                             Text="@context.Name"
+                             Command="ClickItemCommand"
+                             Selected="context == SelectedItem"
+                             @bind-Expanded="@context.IsExpanded">
+                </MudTreeViewItem>
+            </ItemTemplate>
+        </MudTreeView>
+    }
+    else
+    {
+        <MudTreeView Items="@Schemas"
+                 Hover="true"
+                 SelectedValue="SelectedSchema"
+                 SelectedValueChanged="SelectedSchemaChanged">
+            <ItemTemplate>
+                <MudTreeViewItem Value="@context"
+                             Icon="@context.Icon"
+                             IconColor="@context.IconColor"
+                             Text="@context.Name"
+                             Selected="context == SelectedSchema"
+                             @bind-Expanded="@context.IsExpanded">
+                </MudTreeViewItem>
+            </ItemTemplate>
+        </MudTreeView>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public bool IsCode { get; set; }
+    [Parameter] public EventCallback<bool> IsCodeChanged { get; set; }
+
+    [Parameter] public FileSchema? SelectedSchema { get; set; }
+    [Parameter] public FileSystemItem? SelectedItem { get; set; }
+    [Parameter] public EventCallback<FileSchema> SelectedSchemaChanged { get; set; }
+    [Parameter] public EventCallback<FileSystemItem> SelectedItemChanged { get; set; }
+
+    [Parameter] public HashSet<FileSchema> Schemas { get; set; } = new();
+    [Parameter] public HashSet<FileSystemItem> FileSystemItems { get; set; } = new();
+
+    [Parameter] public ICommand NewSchemaCommand { get; set; } = null!;
+    [Parameter] public ICommand EditSchemaCommand { get; set; } = null!;
+    [Parameter] public ICommand RemoveSchemaCommand { get; set; } = null!;
+
+    [Parameter] public ICommand ClickItemCommand { get; set; } = null!;
+    [Parameter] public ICommand GenerateCodeCommand { get; set; } = null!;
+    [Parameter] public ICommand SyncToCloudCommand { get; set; } = null!;
+}

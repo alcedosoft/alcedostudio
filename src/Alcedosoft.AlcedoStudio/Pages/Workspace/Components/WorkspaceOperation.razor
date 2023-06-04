@@ -1,0 +1,37 @@
+﻿<MudStack>
+    <MudButton Command="NewProjectCommand"
+               Color="Color.Primary"
+               Variant="Variant.Outlined"
+               StartIcon="@Icons.Filled.AddCircleOutline"
+               IconColor="Color.Tertiary"
+               FullWidth="true">
+        Create New Project
+    </MudButton>
+
+    <MudButton Command="OpenProjectCommand"
+               Color="Color.Primary"
+               Variant="Variant.Outlined"
+               StartIcon="@Icons.Custom.Uncategorized.FolderOpen"
+               IconColor="Color.Primary"
+               FullWidth="true">
+        Open Project
+    </MudButton>
+
+    <MudButton Command="CloneProjectCommand"
+               Color="Color.Primary"
+               Variant="Variant.Outlined"
+               StartIcon="@Icons.Custom.Brands.GitHub"
+               IconColor="Color.Default"
+               FullWidth="true">
+        Clone Project
+    </MudButton>
+</MudStack>
+
+@code {
+    [Parameter]
+    public ICommand NewProjectCommand { get; set; } = null!;
+    [Parameter]
+    public ICommand OpenProjectCommand { get; set; } = null!;
+    [Parameter]
+    public ICommand CloneProjectCommand { get; set; } = null!;
+}

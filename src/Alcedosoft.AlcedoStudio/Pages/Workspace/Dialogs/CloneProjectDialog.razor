@@ -1,0 +1,72 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="CloneProjectForm">
+            <MudTextField @bind-Value="@CloneProjectModel.ProjectName"
+                          Label="Project Name"
+                          AutoFocus="true"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+            <MudTextField @bind-Value="@CloneProjectModel.RepositoryUrl"
+                          Label="Repository Url"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+            <MudTextField @bind-Value="@CloneProjectModel.ProjectDirectory"
+                          ReadOnly="true"
+                          Required="true"
+                          Label="Project Directory"
+                          Variant="Variant.Text"
+                          Adornment="Adornment.End"
+                          AdornmentColor="Color.Primary"
+                          AdornmentIcon="@Icons.Filled.FolderOpen"
+                          OnAdornmentClick="SelectDirectory"
+                          HelperText="Select empty directory." />
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Instance.Cancel">Cancel</MudButton>
+        <MudButton Disabled="true" Color="Color.Primary" OnClick="Submit">Clone(Coming Soon)</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter] MudDialogInstance Instance { get; set; } = null!;
+
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public FileSystemAccessService FileSystemService { get; set; } = null!;
+
+    public MudForm? CloneProjectForm { get; set; }
+    public CloneProjectViewModel CloneProjectModel { get; set; } = new();
+
+    public async void Submit()
+    {
+        if (this.CloneProjectForm is not null)
+        {
+            await this.CloneProjectForm.Validate();
+
+            if (this.CloneProjectForm.IsValid)
+            {
+                this.Instance.Close(CloneProjectModel);
+            }
+        }
+    }
+
+    public async Task SelectDirectory()
+    {
+        var options = new DirectoryPickerOptionsStartInWellKnownDirectory
+            {
+                StartIn = WellKnownDirectory.Desktop
+            };
+
+        var directory = await this.FileSystemService.ShowDirectoryPickerAsync(options);
+
+        if (directory is not null)
+        {
+            this.CloneProjectModel.DirectoryHandle = directory;
+            this.CloneProjectModel.ProjectDirectory = directory.Name;
+        }
+    }
+}

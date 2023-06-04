@@ -1,0 +1,48 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="NewSchemaForm">
+            <MudTextField @bind-Value="@Schema.Name"
+                          Label="Name"
+                          AutoFocus="true"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+            <MudTextField @bind-Value="@Schema.DisplayName"
+                          Label="DisplayName"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+            <MudTextField @bind-Value="@Schema.Description"
+                          Label="Description"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Instance.Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Create</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter] MudDialogInstance Instance { get; set; } = null!;
+
+    public MudForm? NewSchemaForm { get; set; }
+    public FileSchema Schema { get; set; } = new();
+
+    public async void Submit()
+    {
+        if (this.NewSchemaForm is not null)
+        {
+            await this.NewSchemaForm.Validate();
+
+            if (this.NewSchemaForm.IsValid)
+            {
+                this.Instance.Close(Schema);
+            }
+        }
+    }
+}

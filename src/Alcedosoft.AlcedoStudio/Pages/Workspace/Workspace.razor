@@ -1,0 +1,78 @@
+﻿@page "/workspace"
+
+@if (IsLoading)
+{
+    <WorkspaceLoading />
+}
+else if (FileSystemItems.Count <= 0)
+{
+    <WorkspaceOperation NewProjectCommand="NewProjectCommand"
+                    OpenProjectCommand="OpenProjectCommand"
+                    CloneProjectCommand="CloneProjectCommand" />
+}
+else
+{
+    <MudGrid>
+        <MudItem lg="4">
+            <WorkspaceExplorer @bind-IsCode="IsCode"
+                           @bind-SelectedItem="SelectedItem"
+                           @bind-SelectedSchema="SelectedSchema"
+                           NewSchemaCommand="NewSchemaCommand"
+                           EditSchemaCommand="EditSchemaCommand"
+                           RemoveSchemaCommand="RemoveSchemaCommand"
+                           Schemas="Schemas"
+                           FileSystemItems="FileSystemItems"
+                           ClickItemCommand="ClickItemCommand"
+                           GenerateCodeCommand="GenerateCodeCommand"
+                           SyncToCloudCommand="SyncToCloudCommand" />
+        </MudItem>
+
+        <MudItem lg="8">
+            @if (this.IsCode && SelectedItem is not null)
+            {
+                <WorkspacePreviewEditor @ref="ProviewEditor" Item="SelectedItem" />
+            }
+
+            @if (!this.IsCode && SelectedSchema is not null)
+            {
+                <WorkspaceSchemaEditor Schema="SelectedSchema" />
+            }
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    public bool IsCode { get; set; }
+    public bool IsLoading { get; set; }
+
+    public ICommand NewProjectCommand => new NewProjectCommand(this);
+    public ICommand OpenProjectCommand => new OpenProjectCommand(this);
+    public ICommand CloneProjectCommand => new CloneProjectCommand(this);
+
+    public ICommand NewSchemaCommand => new NewSchemaCommand(this);
+    public ICommand EditSchemaCommand => new EditSchemaCommand(this);
+    public ICommand RemoveSchemaCommand => new RemoveSchemaCommand(this);
+
+    public ICommand ClickItemCommand => new ClickItemCommand(this);
+    public ICommand GenerateCodeCommand => new GenerateCodeCommand(this);
+    public ICommand SyncToCloudCommand => new SyncToCloudCommand(this);
+
+    public FileSchema? SelectedSchema { get; set; }
+    public FileSystemItem? SelectedItem { get; set; }
+    public WorkspacePreviewEditor? ProviewEditor { get; set; }
+
+    public HashSet<FileSchema> Schemas { get; } = new();
+    public HashSet<FileSystemItem> FileSystemItems { get; } = new();
+    public FileSystemDirectoryHandle? DirectoryHandle { get; set; }
+
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    [Inject] public IDialogService DialogService { get; set; } = null!;
+
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public FileSystemAccessService FileSystemService { get; set; } = null!;
+
+    public new void StateHasChanged()
+    {
+        base.StateHasChanged();
+    }
+}

@@ -1,7 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
 <MudThemeProvider @ref="@_themeProvider" @bind-IsDarkMode="@_isDarkMode" />
-<MudDialogProvider />
+<MudDialogProvider FullWidth="true"
+                   CloseButton="true"
+                   CloseOnEscapeKey="true"
+                   DisableBackdropClick="true"
+                   MaxWidth="MaxWidth.ExtraSmall"
+                   Position="DialogPosition.Center" />
 <MudSnackbarProvider />
 
 <MudLayout>
@@ -24,7 +29,7 @@
                              ToggledChanged="e => this.OnToggledChanged(e)" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
                        Color="Color.Inherit"
-                       Link="https://github.com/alcedosoft/alcedosoft.lowcode"
+                       Link="https://github.com/alcedosoft/alcedostudio"
                        Target="_blank" />
     </MudAppBar>
 
@@ -70,14 +75,14 @@
     {
         await Task.Yield();
 
-        //if (_isDarkMode)
-        //{
-        //    await MonacoEditor.SetTheme("vs-dark");
-        //}
-        //else
-        //{
-        //    await MonacoEditor.SetTheme("vs");
-        //}
+        if (_isDarkMode)
+        {
+            await MonacoEditor.SetTheme("vs-dark");
+        }
+        else
+        {
+            await MonacoEditor.SetTheme("vs");
+        }
     }
 
     private void DrawerToggle()
